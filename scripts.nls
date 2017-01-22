@@ -69,21 +69,24 @@ end
 
 ; Sixth script
 ; Same as previous but storing and compputing mean of the 10 experiments 
-;   for every probability value
+;   for every probability value. After that, prints all the means and
+;   draws the plot (p,dm)
 to script6 
   clear 
-  let ex new-list
+  let ds []
+  let ys []
   foreach (range 0 .01 .001)
   [ [p] ->
-    print p
     repeat 10
     [
       clear 
-      BA-PA 300 2 1
+      BA-PA 200 2 1
       ER-RN 0 p
-      set ex store diameter ex
+      set ds store diameter ds
     ]
-    print mean ex
-    set ex new-list 
+    set ys store (mean ds) ys
+    set ds [] 
   ]
+  print ys
+  plotTable (range 0 .01 .001) ys
 end

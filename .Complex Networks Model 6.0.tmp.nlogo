@@ -1311,7 +1311,7 @@ NIL
 MONITOR
 710
 425
-770
+760
 470
 Nb Nodes
 Number-Nodes
@@ -1320,9 +1320,9 @@ Number-Nodes
 11
 
 MONITOR
-775
+800
 425
-825
+850
 470
 Nb Links
 Number-Links
@@ -1331,9 +1331,9 @@ Number-Links
 11
 
 MONITOR
-830
+850
 425
-880
+900
 470
 Density
 Density
