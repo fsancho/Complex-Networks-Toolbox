@@ -1,0 +1,89 @@
+;-----------------------------------------------------------------------------------
+;
+; Write your scripts in this file
+;
+; Please, read the Info Tab for instructions...
+;
+;-----------------------------------------------------------------------------------
+
+; You can add a comment starting with ";"
+; First Script
+to script1
+  clear            ; Clear everything
+  BA-PA 300 2 1    ; Create a Preferential Attatchment Network with 300 nodes
+  layout "spring"  ; Draw it with a spring distribution
+end
+
+; Second script
+; Foreach sample
+to script2
+  foreach (range 0 .01 .001)
+  [ [p] -> 
+    clear
+    BA-PA 300 2 1
+    ER-RN 0 p
+    print diameter
+  ]
+end
+
+; Third script
+; Spread Dynamics sample
+to script3
+  clear
+  ER-RN 300 .01
+  layout "spring"
+  repeat 10 
+  [ Spread 1 0.3 0.3 0 50
+    print spread-summary
+  ]
+end
+
+; Fourth script
+; Small World network sample
+to script4
+  clear
+  foreach (range 10 50 10)
+  [ [p] -> 
+    clear
+    WS p 4 0
+    layout "circle"
+  ]
+end
+
+; Fifth script
+; Several repetitions for every value of the parameter sample
+to script5 
+  clear 
+  foreach (range 0 .01 .001)
+  [ [p] ->
+    print p
+    repeat 10
+    [
+      clear 
+      BA-PA 300 2 1
+      ER-RN 0 p
+      print diameter
+    ]
+  ]
+end
+
+; Sixth script
+; Same as previous but storing and compputing mean of the 10 experiments 
+;   for every probability value
+to script6 
+  clear 
+  let ex new-list
+  foreach (range 0 .01 .001)
+  [ [p] ->
+    print p
+    repeat 10
+    [
+      clear 
+      BA-PA 300 2 1
+      ER-RN 0 p
+      set ex store diameter ex
+    ]
+    print mean ex
+    set ex new-list 
+  ]
+end
