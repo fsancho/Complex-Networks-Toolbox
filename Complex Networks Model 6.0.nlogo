@@ -17,11 +17,13 @@ __includes [ "scripts.nls" ]
 breed [nodes node]
 
 nodes-own [
+  degree
   betweenness
   eigenvector
   closeness
   clustering
   page-rank
+  community
   phi
   visits
   rank
@@ -365,6 +367,7 @@ end
 to compute-centralities
   nw:set-context nodes links
   ask nodes [
+    set degree (count my-links)
     set betweenness nw:betweenness-centrality
     set eigenvector nw:eigenvector-centrality
     set closeness nw:closeness-centrality
@@ -375,7 +378,7 @@ to compute-centralities
 end
 
 to plot-degree
-  Let Dk [count my-links] of nodes
+  Let Dk [degree] of nodes
   let M max Dk
   set-current-plot "Degree Distribution"
   set-plot-x-range 0 (M + 1)
@@ -871,14 +874,15 @@ end
 to communities
   carefully [
     let com nw:louvain-communities
-    ;show nw:modularity com
-    let c 0
-    foreach com [
-      [community] ->
-    ask community [set color (item c base-colors)]
-    set c c + 1
-    if c > 13 [set c 0]
-    ]
+    let n-com length com
+    (foreach com (range 1 (n-com + 1) 1)[
+      [comm c] ->
+        ask comm [
+          set community c
+          set color (item (c mod 13) base-colors)
+        ]
+    ])
+    ask patches [set pcolor 3 + [color] of min-one-of nodes [distance myself]]
   ]
   []
 end
@@ -947,7 +951,7 @@ spring-K
 spring-K
 0
 1
-0.19
+0.56
 .01
 1
 NIL
@@ -962,7 +966,7 @@ length-K
 length-K
 0
 5
-5.0
+1.3
 .01
 1
 NIL
@@ -977,7 +981,7 @@ rep-K
 rep-K
 0
 2
-0.805
+0.0
 .001
 1
 NIL
@@ -992,7 +996,7 @@ size-N
 size-N
 0
 2
-1.4
+1.0
 .1
 1
 NIL
@@ -1393,7 +1397,7 @@ INPUTBOX
 1275
 145
 OneCommand
-script6
+Geom 300 4
 1
 0
 String (commands)
@@ -1601,19 +1605,24 @@ NIL
 
 ## Introduction
 
-![Main](http://aea365.org/blog/wp-content/uploads/2013/11/Morariu-1.png) 
-
 This NetLogo model is a toy tool to launch experiments for __Complex Networks__. 
 
 It provides some basic commands to generate and analyze small networks by using the most common and famous algorithms (random graphs, scale free networks, small world, etc). Also, it provides some methods to test dynamics on networks (spread processes, page rank, cellular automata,...).
 
 All the funtionalities have been designed to be used as extended NetLogo commands. In this way, it is possible to create small scripts to automate the generating and analyzing process in an easier way. Of course, they can be used in more complex and longer NetLogo procedures, but the main aim in their design is to be used by users with no previous experience on this language (although, if you know how to program in NetLogo, you can probably obtain stronger results).  
 
+You can find the las version of the tool in [this Github poject](https://github.com/fsancho/Complex-Network-Analysis).
+
+![Github](http://www.cs.us.es/~fsancho/images/2017-01/github.png) 
+
+
 In the next sections you can find some details about how to use it.
 
 ## The Interface
 
 Although the real power of the system is obtained via scripting, and it is its main goal, the interface has been designed to allow some interactions and facilitate to handle the creation and analysis of the networks. Indeed, before launching a batch of experiments is a good rule to test some behaviours by using the interface and trying to obtain a partial view and understanding of the networks to be analyzed... in this way, you will spend less time in experiments that will not work as you expect.
+
+![Interface](http://www.cs.us.es/~fsancho/images/2017-01/interface.png)
 
 The interface has 3 main areas:
 
@@ -1631,6 +1640,8 @@ The interface has 3 main areas:
 ## Scripts
 
 Use `scripts.nls` to write your customized scripts. In order to acces this file, you must go to Code Tab and then choose ´scripts.nls´ from Included Files chooser. You can add as many aditional files as you want if you need some order in your experiments and analysis (load them with the `__includes` command from main file).
+
+![Scripts](http://www.cs.us.es/~fsancho/images/2017-01/scripts.jpg)
 
 Remember that a script is only a NetLogo procedure, hence it must have the following structure:
 
@@ -1699,7 +1710,7 @@ p - link probability of wiring
 
     ER-RN N p
 
-![Erdos-Renyi](http://mathworld.wolfram.com/images/eps-gif/RandomGraphs_1000.gif)
+![Erdos-Renyi](http://www.cs.us.es/~fsancho/images/2017-01/er-rn.jpg)
 
 ### Watts & Strogatz Small Worlds Networks:
 
@@ -1716,7 +1727,7 @@ p - rewiring probability
 
     WS N k p
 
-![WS](http://www.nature.com/nature/journal/v393/n6684/images/393440aa.eps.2.gif)
+![WS](http://www.cs.us.es/~fsancho/images/2017-01/ws_1.png)
 
 ### Barabasi & Albert Preferential Attachtment:
 
@@ -1738,7 +1749,7 @@ m - Number of links in new nodes
 
     BA-PA N m0 m
 
-![BA](http://graphstream-project.org/media/img/barabasiAlber1.png)
+![BA](http://www.cs.us.es/~fsancho/images/2017-01/ba-pa.png)
 
 ### Klemm and Eguílez Small-World-Scale-Free Network:
 
@@ -1754,6 +1765,8 @@ m0 - Initial complete graph,
 
     KE N m0 μ
 
+![KE](http://www.cs.us.es/~fsancho/images/2017-01/ke.png)
+
 ### Geometric Network:
 
 It is a simple algorithm to be used in metric spaces. It generates N nodes that are randomly located in 2D, and after that two every nodes u,v are linked if d(u,v) < r (a prefixed radius).
@@ -1763,7 +1776,7 @@ r - Maximum radius of connection
 
     Geom N r
 
-![GN](http://i.stack.imgur.com/f8erO.png)
+![GN](http://www.cs.us.es/~fsancho/images/2017-01/geom.png)
 
 ### Spatially Clustered Network:
 
@@ -1773,6 +1786,8 @@ N - Number of nodes,
 g - Average node degree
 
     SCM N g
+
+![SCM](http://www.cs.us.es/~fsancho/images/2017-01/scm.png)
 
 ### Grid (2D-lattice):
 
@@ -1784,7 +1799,7 @@ t? - torus?
 
     Grid N M t?
 
-![Grid](http://www.gigaflop.co.uk/comp/fig3_2_2_1-1.gif)
+![Grid](http://www.cs.us.es/~fsancho/images/2017-01/grid.png)
 
 ### Bipartite:
 
@@ -1795,7 +1810,7 @@ M - Number of links
 
     BiP N M
 
-![Bip](http://www.ics.uci.edu/~eppstein/0xDE/bicycle-minor/bipartite.png)
+![Bip](http://www.cs.us.es/~fsancho/images/2017-01/bip.png)
 
 ### Edge Copying Dynamics
 
@@ -1815,6 +1830,8 @@ beta - probability of new node to uniform connet/copy links
 pecd - probability of creation/deletion random edges
 
     Edge-Copying Iter pncd k beta pecd
+
+![Edge-Copying](http://www.cs.us.es/~fsancho/images/2017-01/edgecopy.png)
 
 ## Global Measures
 
@@ -1860,12 +1877,13 @@ For example:
 
     layout "circle"
 
-![Layout](http://dynamobim.org/wp-content/uploads/forum-assets/colin-mccroneautodesk-com/07/02/cleanup00.png)
+![Layout](http://www.cs.us.es/~fsancho/images/2017-01/layouts.png)
 
 
 ### Compute Centralities
 Current Centralities of every node:
 
+    Degree,
     Betweenness, 
     Eigenvector, 
     Closeness, 
@@ -1876,14 +1894,14 @@ The way to compute all of them is by executing:
 
     compute-cantralities
 
-![Centralities](https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/6_centrality_measures.png/300px-6_centrality_measures.png)
+![Centralities](http://www.cs.us.es/~fsancho/images/2017-01/medidas.png)
 
 ### Communities
 
 Computes the communities of the current network using the Louvain method (maximizing the 
 modularity measure of the network).
 
-![Communities](https://mrpanot.files.wordpress.com/2013/10/d3_mess_sample1.png)
+![Communities](http://www.cs.us.es/~fsancho/images/2017-01/communities.png)
 
 ## Dynamics
 
@@ -1895,7 +1913,7 @@ Iter - Number of iterations
 
     PRank Iter
 
-![PR](http://3.bp.blogspot.com/-O_lDNCgia7s/URPR8mDUrFI/AAAAAAAAD5o/cdWts4tr8n0/s1600/pagerank+Network.JPG)
+![PR](http://www.cs.us.es/~fsancho/images/2017-01/prank.png)
 
 ### Rewire
 
@@ -1905,7 +1923,7 @@ p - probability of rewire every link
 
     Rewire p
 
-![Rewire](http://jhnet.co.uk/articles/mesh_muddling_madness/a_simple_torus_network_with_some_edges_rewired.png)
+![Rewire](http://www.cs.us.es/~fsancho/images/2017-01/rewire.png)
 
 ### Spread of infection/message
 
@@ -1925,7 +1943,7 @@ Iter - Number of iterations
 
     Spread N-mi ps pr pin Iter
 
-![Spread](http://www.aquaculture.stir.ac.uk/public/aphaw/images/diseasespread.png)
+![Spread](http://www.cs.us.es/~fsancho/images/2017-01/spread.png)
 
 ### Cellular Automata
 
@@ -1952,7 +1970,7 @@ p - ratio of memory in the new state
 
     ContCA Iter pIn p
 
-![CellularAutomata](http://www.daviddarling.info/images/neural_net.gif)
+![CellularAutomata](http://www.cs.us.es/~fsancho/images/2017-01/contca.png)
 
 ## Input/Output
 
@@ -1982,7 +2000,7 @@ Where view can be any of the following:
 
 The program will automatically name the file with the distribution name and the date and time of exporting.
 
-![Export](https://shastatrade.files.wordpress.com/2015/03/export-import-stamps_67456054.jpg)
+![Export](http://www.cs.us.es/~fsancho/images/2017-01/export.png)
 @#$#@#$#@
 default
 true
