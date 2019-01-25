@@ -90,3 +90,87 @@ to script6
   print ys
   plotTable (range 0 .01 .001) ys
 end
+
+to demoER
+  clear
+  foreach (range 0 .3 .01) 
+  [ [p] ->
+    clear
+    no-display
+    ER-RN 40 p
+    layout "circle"
+    display
+    plots
+    wait .1
+  ]
+  layout "spring"
+end
+
+to demoWS
+  clear
+  foreach (range 0 .3 .01) 
+  [ [p] ->
+    clear
+    no-display
+    WS 40 4 p
+    layout "circle"
+    display
+    plots
+    wait .1
+  ]
+  layout "spring"
+end
+
+to demoBA
+  clear
+  foreach (range 1 5 1)
+  [ p ->
+    clear
+    BA-PA 100 2 p
+    plots
+    layout "spring"
+    wait 1
+  ]
+end
+
+to demoGeo
+  clear
+  foreach (range 1 10 1)
+  [ p ->
+    clear
+    Geom 200 p
+    compute-centralities
+    plots
+    wait 1
+  ]
+end
+
+to demoGrid
+  clear
+  Grid 10 10 false
+  layout "spring"
+  let cl []
+  repeat 100
+  [ Rewire .01
+    compute-centralities
+    plots
+    set cl store Average-clustering cl 
+  ]
+  print cl
+  plotTable (range 0 100) cl
+end
+
+to demoSpread
+  clear
+  Grid 10 10 false
+  layout "spring"
+  spread 1 .1 .1 .01 1000
+end
+
+to demoSpread2
+  clear
+  BA-PA 300 2 1
+  ER-RN 0 .001
+  layout "spring"
+  spread 1 .1 .1 .01 1000
+end

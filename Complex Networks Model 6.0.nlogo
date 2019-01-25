@@ -45,6 +45,8 @@ to startup
   ask patch 8 0 [
     set plabel-color black
     set plabel "PLEASE, READ INFO TAB FOR INSTRUCTIONS"]
+  wait 2
+  clear
 end
 
 to clear
@@ -54,12 +56,6 @@ to clear
   clear-all-plots
   set-default-shape nodes "circle"
   ask patches [set pcolor white]
-end
-
-to run-commands
-  run script
-;  let cms split script "\n"
-;  foreach cms [ [c] -> run c ]
 end
 
 ; Auxiliary reports to split a string using a substring
@@ -109,8 +105,8 @@ end
 to plotTable [Lx Ly]
   set-current-plot "General"
   clear-plot
-  set-plot-x-range (min Lx) (max Lx)
-  set-plot-y-range (min Ly) (max Ly)
+  set-plot-x-range (precision (min Lx) 2) (precision (max Lx) 2)
+  set-plot-y-range (precision (min Ly) 2) (precision (max Ly) 2)
   (foreach Lx Ly
     [ [x y] ->
       plotxy x y
@@ -890,11 +886,11 @@ end
 GRAPHICS-WINDOW
 10
 10
-707
-448
+606
+385
 -1
 -1
-13.0
+11.1
 1
 12
 1
@@ -915,9 +911,9 @@ ticks
 30.0
 
 PLOT
-710
+610
 10
-910
+810
 130
 Degree Distribution
 Degree
@@ -934,24 +930,24 @@ PENS
 
 CHOOSER
 10
-450
+390
 102
-495
+435
 Tlayout
 Tlayout
 "circle" "radial" "tutte" "bipartite" "spring"
-2
+0
 
 SLIDER
 104
-450
+390
 196
-483
+423
 spring-K
 spring-K
 0
 1
-0.56
+0.45
 .01
 1
 NIL
@@ -959,14 +955,14 @@ HORIZONTAL
 
 SLIDER
 199
-450
+390
 291
-483
+423
 length-K
 length-K
 0
 5
-1.3
+2.4
 .01
 1
 NIL
@@ -974,14 +970,14 @@ HORIZONTAL
 
 SLIDER
 294
-450
+390
 386
-483
+423
 rep-K
 rep-K
 0
 2
-0.0
+0.015
 .001
 1
 NIL
@@ -989,14 +985,14 @@ HORIZONTAL
 
 SLIDER
 105
-485
+425
 197
-518
+458
 size-N
 size-N
 0
 2
-1.0
+0.9
 .1
 1
 NIL
@@ -1004,9 +1000,9 @@ HORIZONTAL
 
 BUTTON
 485
-450
+390
 540
-483
+423
 O-O
 layout Tlayout
 NIL
@@ -1021,9 +1017,9 @@ NIL
 
 BUTTON
 545
-450
+390
 600
-483
+423
 Spring
 spring
 T
@@ -1038,9 +1034,9 @@ NIL
 
 BUTTON
 200
-485
+425
 255
-518
+458
 NIL
 refresh
 NIL
@@ -1054,9 +1050,9 @@ NIL
 1
 
 PLOT
-710
+610
 130
-910
+810
 250
 Betweenness Distribution
 Betweenness
@@ -1072,9 +1068,9 @@ PENS
 "default" 1.0 1 -8630108 true "" "histogram [betweenness] of nodes"
 
 PLOT
-910
+810
 10
-1110
+1010
 130
 Eigenvector Distribution
 Eigenvector
@@ -1090,9 +1086,9 @@ PENS
 "default" 1.0 1 -2674135 true "" ""
 
 PLOT
-910
+810
 130
-1110
+1010
 250
 Closeness Distribution
 Closeness
@@ -1108,9 +1104,9 @@ PENS
 "default" 1.0 1 -6459832 true "" ""
 
 PLOT
-710
+610
 250
-910
+810
 370
 Clustering Distribution
 Clustering
@@ -1126,9 +1122,9 @@ PENS
 "default" 1.0 1 -10899396 true "" ""
 
 BUTTON
-910
+810
 370
-1110
+1010
 403
  _Λ_Λ_Λ_
 Plots
@@ -1143,10 +1139,10 @@ NIL
 1
 
 BUTTON
-1115
-45
-1275
-78
+335
+460
+490
+493
 Clear
 clear
 NIL
@@ -1160,10 +1156,10 @@ NIL
 1
 
 MONITOR
-710
-375
-792
-420
+10
+460
+92
+505
 Avg Pth Lgth
 Average-Path-Length
 3
@@ -1171,9 +1167,9 @@ Average-Path-Length
 11
 
 MONITOR
-855
+755
 300
-905
+805
 345
 Avg
 Average-Clustering
@@ -1182,9 +1178,9 @@ Average-Clustering
 11
 
 MONITOR
-855
+755
 60
-905
+805
 105
 Avg
 Average-Degree
@@ -1193,9 +1189,9 @@ Average-Degree
 11
 
 BUTTON
-850
+750
 25
-905
+805
 58
 .o0O
 ask nodes [set size (count my-links)]\nnormalize-sizes-and-colors 5
@@ -1210,9 +1206,9 @@ NIL
 1
 
 BUTTON
-1050
+955
 25
-1105
+1010
 58
 .o0O
 ask nodes [set size eigenvector]\nnormalize-sizes-and-colors 15
@@ -1227,9 +1223,9 @@ NIL
 1
 
 BUTTON
-850
+750
 145
-905
+805
 178
 .o0O
 ask nodes [set size betweenness]\nnormalize-sizes-and-colors violet
@@ -1244,9 +1240,9 @@ NIL
 1
 
 BUTTON
-1050
+955
 145
-1105
+1010
 178
 .o0O
 ask nodes [set size closeness]\nnormalize-sizes-and-colors 35
@@ -1261,9 +1257,9 @@ NIL
 1
 
 BUTTON
-850
+750
 265
-905
+805
 298
 .o0O
 ask nodes [set size clustering]\nnormalize-sizes-and-colors 55
@@ -1278,9 +1274,9 @@ NIL
 1
 
 PLOT
-910
+810
 250
-1110
+1010
 370
 PageRank Distribution
 Page-Ranking
@@ -1296,9 +1292,9 @@ PENS
 "default" 1.0 1 -13345367 true "" ""
 
 BUTTON
-1050
+955
 265
-1105
+1010
 298
 .o0O
 ask nodes [set size page-rank]\nnormalize-sizes-and-colors blue
@@ -1313,10 +1309,10 @@ NIL
 1
 
 MONITOR
-710
-425
-770
-470
+160
+460
+220
+505
 Nb Nodes
 Number-Nodes
 0
@@ -1324,10 +1320,10 @@ Number-Nodes
 11
 
 MONITOR
-775
-425
-825
-470
+225
+460
+275
+505
 Nb Links
 Number-Links
 0
@@ -1335,48 +1331,20 @@ Number-Links
 11
 
 MONITOR
-830
-425
-880
-470
+280
+460
+330
+505
 Density
 Density
 3
 1
 11
 
-INPUTBOX
-1115
-145
-1275
-366
-Script
-clear\nWS 40 4 .3\nlayout \"circle\"
-1
-1
-String (commands)
-
-BUTTON
-1220
-360
-1275
-393
-==>
-run-commands
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
 PLOT
-910
+610
 405
-1110
+1010
 525
 General
 NIL
@@ -1391,39 +1359,11 @@ false
 PENS
 "default" 1.0 0 -16777216 true "" ""
 
-INPUTBOX
-1115
-85
-1275
-145
-OneCommand
-Geom 300 4
-1
-0
-String (commands)
-
-BUTTON
-1220
-80
-1275
-113
-~~>
-run OneCommand
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
 MONITOR
-795
-375
-855
-420
+95
+460
+155
+505
 Diameter
 diameter
 0
@@ -1431,10 +1371,10 @@ diameter
 11
 
 BUTTON
-1165
-140
-1220
-175
+550
+10
+605
+45
 Help
 help
 NIL
@@ -1449,24 +1389,24 @@ NIL
 
 SLIDER
 390
-450
+390
 482
-483
+423
 gravity
 gravity
 0
 10
-0.0
+0.18
 .01
 1
 NIL
 HORIZONTAL
 
 BUTTON
-710
-475
-900
-508
+610
+370
+810
+403
 NIL
 Communities
 NIL
@@ -1480,10 +1420,10 @@ NIL
 1
 
 BUTTON
-1115
-10
-1190
-43
+335
+425
+410
+458
 Load
 Load
 NIL
@@ -1497,10 +1437,10 @@ NIL
 1
 
 BUTTON
-1200
-10
-1275
-43
+415
+425
+490
+458
 Save
 save
 NIL
@@ -1514,9 +1454,9 @@ NIL
 1
 
 MONITOR
-855
+755
 180
-905
+805
 225
 Avg
 Average-Betweenness
@@ -1525,9 +1465,9 @@ Average-Betweenness
 11
 
 MONITOR
-1055
+960
 60
-1105
+1010
 105
 Avg
 Average-eigenvector
@@ -1536,9 +1476,9 @@ Average-eigenvector
 11
 
 MONITOR
-1055
+960
 180
-1105
+1010
 225
 Avg
 Average-closeness
@@ -1547,9 +1487,9 @@ Average-closeness
 11
 
 MONITOR
-1055
+960
 300
-1105
+1010
 345
 Avg
 Average-pagerank
@@ -1558,10 +1498,10 @@ Average-pagerank
 11
 
 BUTTON
-605
-450
-707
-483
+495
+425
+597
+458
 Inspect Node
 inspect-node
 T
@@ -2313,7 +2253,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.0
+NetLogo 6.0.4
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
