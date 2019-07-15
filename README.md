@@ -50,7 +50,7 @@ Although the real power of the system is obtained via scripting, and it is its m
 The interface has 3 main areas:
 
   1. __Network Representation__: In the left side. It has a panel where the network is represented and it allows one only interaction, to inspect node information (when the button Inspect Node is pressed). Under this panel some widgets to manage the visualization properties are located: selected layout and parameters for it.
-  1. __Measures Panel__: In the middle. It contains a collection of plots where the several centralities are shown and some monitors with global information about the current network. The measures that are computed for every node are:
+  1. __Measures Panel__: In the right side. It contains a collection of plots where the several centralities are shown and some monitors with global information about the current network. The measures that are computed for every node are:
     * Degree
     * Clustering
     * Betweenness
