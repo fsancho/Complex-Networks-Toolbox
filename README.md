@@ -50,16 +50,14 @@ Although the real power of the system is obtained via scripting, and it is its m
 The interface has 3 main areas:
 
   1. __Network Representation__: In the left side. It has a panel where the network is represented and it allows one only interaction, to inspect node information (when the button Inspect Node is pressed). Under this panel some widgets to manage the visualization properties are located: selected layout and parameters for it.
-  1. __Measures Panel__: In the middle. It contains a collection of plots where the several centralities are shown and some monitors with global information about the current network. The measures that are computed for every node are:
+  1. __Measures Panel__: In the right side. It contains a collection of plots where the several centralities are shown and some monitors with global information about the current network. The measures that are computed for every node are:
     * Degree
     * Clustering
     * Betweenness
     * Eigenvector
     * Closeness
     * Page-Rank
-
-  1. __Script Panel__: In the right side. It has two input widgets: the first one, OneCommmand, to write one command to be executed (for example, the name of a script); and a multiline script widget, where you can test simple scripts to be run. Some functionalities are not available in this last widget, and we advise you to use the script file to write the more complex scripts you can need (also, the file editor is more comfortable than the widget). In the top of this panel you can find also some buttons to load, save and clear the current network.
-
+    
 ## Scripts
 
 Use `scripts.nls` to write your customized scripts. In order to acces this file, you must go to Code Tab and then choose ´scripts.nls´ from Included Files chooser. You can add as many aditional files as you want if you need some order in your experiments and analysis (load them with the `__includes` command from main file).
@@ -72,9 +70,9 @@ Remember that a script is only a NetLogo procedure, hence it must have the follo
       ...
     end
 
-After defining your scripts, you can run them directly from the Command Center, from the OneCommand input in the interface, or as auxiliary procedure in other scripts.
+After defining your scripts, you can run them directly from the Command Center.
 
-In tho document you can find specific network commands that can be used to write scripts for creating and analyzing networks. In fact, this scripts can be written using any NetLogo command, but in this library you can find some shortcuts to make easier the process.
+In the document you can find specific network commands that can be used to write scripts for creating and analyzing networks. In fact, this scripts can be written using any NetLogo command, but in this library you can find some shortcuts to make easier the process.
 
 Some of the useful NetLogo commands you will probably need are:
 
