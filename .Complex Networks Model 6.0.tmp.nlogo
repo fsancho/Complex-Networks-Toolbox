@@ -1567,13 +1567,14 @@ Although the real power of the system is obtained via scripting, and it is its m
 The interface has 3 main areas:
 
   1. __Network Representation__: In the left side. It has a panel where the network is represented and it allows one only interaction, to inspect node information (when the button Inspect Node is pressed). Under this panel some widgets to manage the visualization properties are located: selected layout and parameters for it.
-  1. __Measures Panel__: In the right side. It contains a collection of plots where the several centralities are shown and some monitors with global information about the current network. The measures that are computed for every node are:
+  1. __Measures Panel__: In the middle. It contains a collection of plots where the several centralities are shown and some monitors with global information about the current network. The measures that are computed for every node are:
     * Degree
     * Clustering
     * Betweenness
     * Eigenvector
     * Closeness
     * Page-Rank
+
 
 ## Scripts
 
@@ -1589,7 +1590,7 @@ Remember that a script is only a NetLogo procedure, hence it must have the follo
       ...
     end
 
-After defining your scripts, you can run them directly from the Command Center.
+After defining your scripts, you can run them directly from the Command Center, from the OneCommand input in the interface, or as auxiliary procedure in other scripts.
 
 In tho document you can find specific network commands that can be used to write scripts for creating and analyzing networks. In fact, this scripts can be written using any NetLogo command, but in this library you can find some shortcuts to make easier the process.
 
