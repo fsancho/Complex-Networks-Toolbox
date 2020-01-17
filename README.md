@@ -9,6 +9,7 @@ It works with NetLogo 6.0. Please read the Info Tab for instructions.
   1. The Interface
   1. Scripts
   1. Generators
+
     * Erdős-Rényi Random Network
     * Watts & Strogatz Small Worlds Networks
     * Barabasi & Albert Preferential Attachtment
@@ -20,14 +21,17 @@ It works with NetLogo 6.0. Please read the Info Tab for instructions.
     * Edge Copying Dynamics
   1. Global Measures
   1. Utilities
+
     * Layouts
     * Compute Centralities
     * Communities
   1. Dynamics
+
     * Page Rank
     * Spread of infection/message
     * Cellular Automata
   1. Input/Output
+
     * Save / Load GraphML
     * Export Distributions
 
@@ -51,13 +55,14 @@ The interface has 3 main areas:
 
   1. __Network Representation__: In the left side. It has a panel where the network is represented and it allows one only interaction, to inspect node information (when the button Inspect Node is pressed). Under this panel some widgets to manage the visualization properties are located: selected layout and parameters for it.
   1. __Measures Panel__: In the right side. It contains a collection of plots where the several centralities are shown and some monitors with global information about the current network. The measures that are computed for every node are:
+
     * Degree
     * Clustering
     * Betweenness
     * Eigenvector
     * Closeness
     * Page-Rank
-    
+
 ## Scripts
 
 Use `scripts.nls` to write your customized scripts. In order to acces this file, you must go to Code Tab and then choose ´scripts.nls´ from Included Files chooser. You can add as many aditional files as you want if you need some order in your experiments and analysis (load them with the `__includes` command from main file).
@@ -83,8 +88,7 @@ Some of the useful NetLogo commands you will probably need are:
   * `foreach [x1....xn] [ [x] -> P1...Pk ]` : for each `x` in `[x0 ... xn]` it executes the comands `P1` to `Pk`. 
   * `repeat N [P1...Pk]` : Repeat the block of commands `P1` to `Pk`, `N` times.
   * `store val L` : Store value `val` in list `L`.
-  * `mean L` : Returns the mean value of list `L`.
-  * `sum / max / min L` : Returns the sum/max/min of values of list `L`.
+  * `mean/max/min/sum L` : Returns the mean/max/min/sum value of list `L`.
   * `print v` : Print value of `v` in the Output.
   * `plotTable [x1...xn] [y1...yn]` : Plot the points `(x1,y1)...(xn,yn)`. 
 
@@ -266,7 +270,7 @@ The global measures we can take from any network are:
 Some of them need to compute centralities before they can be used.  If you choose _All_, ypu obtain a list with all the measures of the network.
 
 You can print any of them in the Output Window:
-  
+
     Print measure
 
 

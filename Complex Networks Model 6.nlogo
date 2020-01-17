@@ -1538,8 +1538,7 @@ Some of the useful NetLogo commands you will probably need are:
   * `foreach [x1....xn] [ [x] -> P1...Pk ]` : for each `x` in `[x0 ... xn]` it executes the comands `P1` to `Pk`. 
   * `repeat N [P1...Pk]` : Repeat the block of commands `P1` to `Pk`, `N` times.
   * `store val L` : Store value `val` in list `L`.
-  * `mean L` : Returns the mean value of list `L`.
-  * `sum / max / min L` : Returns the sum/max/min of values of list `L`.
+  * `mean/sum/max/min L` : Returns the mean/sum/max/min value of list `L`.
   * `print v` : Print value of `v` in the Output.
   * `plotTable [x1...xn] [y1...yn]` : Plot the points `(x1,y1)...(xn,yn)`. 
 
