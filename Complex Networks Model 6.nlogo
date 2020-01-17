@@ -4,7 +4,7 @@
 ;   Don't change anything in this file. It's the heart of the system.
 ; But if you change something, be careful...
 ;
-; Write your scripts in the scripts.nls file (open it from "Included Files" chooser
+; Write your scripts in the scripts.nls file (open it from "Included Files" chooser)
 ;
 ; Please, read the Info Tab for instructions...
 ;
@@ -188,13 +188,6 @@ to BA-PA [N m0 m]
   post-process
 end
 
-
-;; This code is the heart of the "preferential attachment" mechanism, and acts like
-;; a lottery where each node gets a ticket for every connection it already has.
-;; While the basic idea is the same as in the Lottery Example (in the Code Examples
-;; section of the Models Library), things are made simpler here by the fact that we
-;; can just use the links as if they were the "tickets": we first pick a random link,
-;; and than we pick one of the two ends of that link.
 to-report find-partner
   report [one-of both-ends] of one-of links
 end
@@ -314,7 +307,7 @@ to Edge-Copying [Iter pncd k beta pecd]
     let v one-of nodes
     ifelse random-float 1 < beta
     [
-      ;crea
+      ;creation
       ask v [
         let other-k-nodes (other nodes) with [not link-neighbor? v]
         if count other-k-nodes >= k
@@ -325,7 +318,7 @@ to Edge-Copying [Iter pncd k beta pecd]
       ]
     ]
     [
-      ; copia
+      ; copy
       let n k
       while [n > 0] [
         let u one-of other nodes
@@ -373,59 +366,9 @@ to compute-centralities
   update-plots
 end
 
-to plot-degree
-  Let Dk [degree] of nodes
+to do-plot [Dk where]
   let M max Dk
-  set-current-plot "Degree Distribution"
-  set-plot-x-range 0 (M + 1)
-  set-plot-y-range 0 1
-  histogram Dk
-end
-
-to plot-page-rank
-  Let Dk [page-rank] of nodes
-  let M max Dk
-  set-current-plot "PageRank Distribution"
-  set-plot-x-range 0 (M + M / 100)
-  set-plot-y-range 0 1
-  set-histogram-num-bars 100
-  histogram Dk
-end
-
-to plot-betweenness
-  Let Dk [nw:betweenness-centrality] of nodes
-  let M max Dk
-  set-current-plot "Betweenness Distribution"
-  set-plot-x-range 0 (ceiling M)
-  set-plot-y-range 0 1
-  set-histogram-num-bars 100
-  histogram Dk
-end
-
-to plot-eigenvector
-  Let Dk [nw:eigenvector-centrality] of nodes
-  let M max Dk
-  set-current-plot "Eigenvector Distribution"
-  set-plot-x-range 0 (ceiling M)
-  set-plot-y-range 0 1
-  set-histogram-num-bars 100
-  histogram Dk
-end
-
-to plot-closeness
-  Let Dk [nw:closeness-centrality] of nodes
-  let M max Dk
-  set-current-plot "Closeness Distribution"
-  set-plot-x-range 0 (ceiling M)
-  set-plot-y-range 0 1
-  set-histogram-num-bars 100
-  histogram Dk
-end
-
-to plot-clustering
-  Let Dk [nw:clustering-coefficient] of nodes
-  let M max Dk
-  set-current-plot "Clustering Distribution"
+  set-current-plot (word where " Distribution")
   set-plot-x-range 0 (ceiling M)
   set-plot-y-range 0 1
   set-histogram-num-bars 100
@@ -435,14 +378,15 @@ end
 to plots
   clear-all-plots
   compute-centralities
-  carefully [plot-page-rank][]
-  carefully [plot-degree][]
-  carefully [plot-betweenness][]
-  carefully [plot-eigenvector][]
-  carefully [plot-closeness][]
-  carefully [plot-clustering][]
+  carefully [do-plot ([page-rank] of nodes) "PageRank"][]
+  carefully [do-plot ([degree] of nodes) "Degree"][]
+  carefully [do-plot ([nw:betweenness-centrality] of nodes) "Betweenness"][]
+  carefully [do-plot ([nw:eigenvector-centrality] of nodes) "Eigenvector"][]
+  carefully [do-plot ([nw:closeness-centrality] of nodes) "Closeness"][]
+  carefully [do-plot ([nw:clustering-coefficient] of nodes) "Clustering"][]
   carefully [set diameter compute-diameter 1000][]
 end
+
 
 ;; We want the size of the turtles to reflect their centrality, but different measures
 ;; give different ranges of size, so we normalize the sizes according to the formula
@@ -602,42 +546,34 @@ to spring
 end
 
 to help
-  user-message (word "Generators (see Info Tab):" "\n"
-    "* ER-RN (N, p)" "\n"
-    "* WS (N, k, p)" "\n"
-    "* BA-PA (N, m0, m)" "\n"
-    "* KE (N, m0, mu)" "\n"
-    "* Geom (N, r)" "\n"
-    "* SCM (N, g)" "\n"
-    "* Grid (N,M,t?)" "\n"
-    "* BiP (N, M)" "\n"
+  user-message (word "                                      HELP                (Details in Info Tab)" "\n"
+    "----------------------------------------------------------" "\n"
+    "Generators:" "\n"
+    "* ER-RN (N, p)                          * WS (N, k, p)" "\n"
+    "* BA-PA (N, m0, m)                * KE (N, m0, mu)" "\n"
+    "* Geom (N, r)                           * SCM (N, g)" "\n"
+    "* Grid (N,M,t?)                         * BiP (N, M)" "\n"
     "* Edge-Copying (N, pn, k, b, pe)" "\n"
-    "-----------------------------" "\n"
+    "----------------------------------------------------------" "\n"
     "Utilities:" "\n"
-    "* Compute-centralities" "\n"
-    "* Communities" "\n"
-    "* PRank (Iter)" "\n"
-    "* Rewire (p)" "\n"
+    "* Compute-centralities           * Communities" "\n"
+    "* PRank (Iter)                            * Rewire (p)" "\n"
+    "* ContCA (Iter, pIn, p)             * Layout (type)" "\n"
+    "* Print (measure)                     * DiscCA (Iter, pIn, p0_ac, p1_ac)" "\n"
     "* Spread (Ni, ps, pr, pin, Iter)" "\n"
-    "* DiscCA (Iter, pIn, p0_ac, p1_ac)" "\n"
-    "* ContCA (Iter, pIn, p)" "\n"
-    "* Layout (type)" "\n"
-    "* Print (measure)" "\n"
-    "-----------------------------" "\n"
+    "----------------------------------------------------------" "\n"
     "Global Measures:" "\n"
     "  Number-Nodes, Number-Links, Density, Average-Degree," "\n"
     "  Average-Path-Length, Diameter, Average-Clustering," "\n"
     "  Average-Betweenness, Average-Eigenvector," "\n"
     "  Average-Closeness, Average-PageRank" "\n"
-    "-----------------------------" "\n"
-    "Layouts:" "\n"
-    "  circle, radial, tutte, spring, bipartite" "\n"
-    "-----------------------------" "\n"
+    "----------------------------------------------------------" "\n"
+    "Layouts:  circle, radial, tutte, spring, bipartite" "\n"
+    "----------------------------------------------------------" "\n"
     "* Save, Load" "\n"
     "* Export (view)" "\n"
-    "-----------------------------" "\n"
-    "Views:" "\n"
-    "  Degree, Clustering, Betweenness, Eigenvector, Closeness, PageRank" "\n"
+    "    Views:  Degree, Clustering, Betweenness, Eigenvector, " "\n"
+    "                 Closeness, PageRank" "\n"
     )
 end
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -936,7 +872,7 @@ CHOOSER
 Tlayout
 Tlayout
 "circle" "radial" "tutte" "bipartite" "spring"
-0
+4
 
 SLIDER
 104
@@ -947,7 +883,7 @@ spring-K
 spring-K
 0
 1
-0.45
+0.79
 .01
 1
 NIL
@@ -962,7 +898,7 @@ length-K
 length-K
 0
 5
-2.4
+0.58
 .01
 1
 NIL
@@ -977,7 +913,7 @@ rep-K
 rep-K
 0
 2
-0.015
+0.016
 .001
 1
 NIL
@@ -992,7 +928,7 @@ size-N
 size-N
 0
 2
-0.9
+0.6
 .1
 1
 NIL
@@ -1396,7 +1332,7 @@ gravity
 gravity
 0
 10
-0.18
+0.22
 .01
 1
 NIL
@@ -2251,7 +2187,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.1.0
+NetLogo 6.1.1
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
