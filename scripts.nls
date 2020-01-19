@@ -17,12 +17,13 @@ end
 ; Second script
 ; Foreach sample
 to script2
+  print-csv ["p" "diameter"]
   foreach (range 0 .01 .001)
   [ [p] -> 
     clear
     BA-PA 300 2 1
     ER-RN 0 p
-    print diameter
+    print-csv (list p diameter)
   ]
 end
 
@@ -30,11 +31,12 @@ end
 ; Spread Dynamics sample
 to script3
   clear
+  print-csv ["Healthy" "Infected" "Recovery"]
   ER-RN 300 .01
   layout "spring"
   repeat 10 
   [ Spread 1 0.3 0.3 0 50
-    print spread-summary
+    print-csv spread-summary
   ]
 end
 
@@ -54,15 +56,15 @@ end
 ; Several repetitions for every value of the parameter sample
 to script5 
   clear 
+  print-csv ["p" "diameter"]
   foreach (range 0 .01 .001)
   [ [p] ->
-    print p
     repeat 10
     [
       clear 
       BA-PA 300 2 1
       ER-RN 0 p
-      print diameter
+      print-csv (list p diameter)
     ]
   ]
 end
@@ -75,6 +77,7 @@ to script6
   clear 
   let ds []
   let ys []
+  print-csv ["p" "mean-diameter"]
   foreach (range 0 .01 .001)
   [ [p] ->
     repeat 10
@@ -85,10 +88,41 @@ to script6
       set ds store diameter ds
     ]
     set ys store (mean ds) ys
+    print-csv (list p (mean ds))
     set ds [] 
   ]
   print ys
   plotTable (range 0 .01 .001) ys
+end
+
+to script7
+  clear
+  BA-PA 300 2 1
+  layout "spring"
+  let cs []
+  repeat 100
+  [
+    remove-node "uniform"
+    compute-centralities
+    compute-components
+    set cs store (length components) cs
+  ]
+  plotTable (range 100) cs
+end
+
+to script8
+  clear
+  BA-PA 300 2 1
+  layout "spring"
+  let cs []
+  repeat 100
+  [
+    remove-node "degree"
+    compute-centralities
+    compute-components
+    set cs store (length components) cs
+  ]
+  plotTable (range 100) cs
 end
 
 to demoER

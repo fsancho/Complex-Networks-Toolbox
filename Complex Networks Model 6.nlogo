@@ -10,7 +10,7 @@
 ;
 ;-----------------------------------------------------------------------------------
 
-extensions [ nw ]
+extensions [ nw rnd]
 
 __includes [ "scripts.nls" ]
 
@@ -34,6 +34,7 @@ nodes-own [
 
 globals [
   diameter
+  components
   ]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -102,6 +103,11 @@ to inspect-node
   ]
 end
 
+to remove-node [prob]
+  let selected ifelse-value (prob = "uniform")[one-of nodes] [rnd:weighted-one-of nodes [run-result prob]]
+  ask selected  [die]
+end
+
 to plotTable [Lx Ly]
   set-current-plot "General"
   clear-plot
@@ -111,6 +117,12 @@ to plotTable [Lx Ly]
     [ [x y] ->
       plotxy x y
     ])
+end
+
+to print-csv [val]
+  ifelse is-list? val
+  [ print reduce [[x y] -> (word x ", " y)] val]
+  [ print val]
 end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -416,6 +428,10 @@ to-report compute-diameter [n]
   report s
 end
 
+to compute-components
+  set components nw:weak-component-clusters
+end
+
 ;to compute-phi
 ;  ask nodes [
 ;    set phi sum [exp -1 * ((nw:distance-to myself) ^ 2  / 100)] of nodes
@@ -466,9 +482,10 @@ to-report All-Measures
   report (list Number-Nodes
                Number-Links
                Density
+               Diameter
+               length Components
                Average-Degree
                Average-Path-Length
-               Diameter
                Average-Clustering
                Average-Betweenness
                Average-Eigenvector
@@ -536,6 +553,7 @@ to post-process
     set color [100 100 100 100]
   ]
   set diameter compute-diameter 1000
+  compute-components
 end
 
 to spring
@@ -559,14 +577,15 @@ to help
     "* Compute-centralities           * Communities" "\n"
     "* PRank (Iter)                            * Rewire (p)" "\n"
     "* ContCA (Iter, pIn, p)             * Layout (type)" "\n"
-    "* Print (measure)                     * DiscCA (Iter, pIn, p0_ac, p1_ac)" "\n"
+    "* Print (measure)                     * Print-csv (data)" "\n"
+    "* DiscCA (Iter, pIn, p0_ac, p1_ac)" "\n"
     "* Spread (Ni, ps, pr, pin, Iter)" "\n"
     "----------------------------------------------------------" "\n"
     "Global Measures:" "\n"
     "  Number-Nodes, Number-Links, Density, Average-Degree," "\n"
     "  Average-Path-Length, Diameter, Average-Clustering," "\n"
     "  Average-Betweenness, Average-Eigenvector," "\n"
-    "  Average-Closeness, Average-PageRank" "\n"
+    "  Average-Closeness, Average-PageRank, Components" "\n"
     "----------------------------------------------------------" "\n"
     "Layouts:  circle, radial, tutte, spring, bipartite" "\n"
     "----------------------------------------------------------" "\n"
@@ -867,80 +886,80 @@ PENS
 CHOOSER
 10
 390
-102
+120
 435
-Tlayout
-Tlayout
+Select-Layout
+Select-Layout
 "circle" "radial" "tutte" "bipartite" "spring"
 4
 
 SLIDER
-104
+125
 390
-196
+217
 423
 spring-K
 spring-K
 0
 1
-0.79
+0.53
 .01
 1
 NIL
 HORIZONTAL
 
 SLIDER
-199
+220
 390
-291
+312
 423
 length-K
 length-K
 0
 5
-0.58
+1.0
 .01
 1
 NIL
 HORIZONTAL
 
 SLIDER
-294
+315
 390
-386
+407
 423
 rep-K
 rep-K
 0
 2
-0.016
+0.06
 .001
 1
 NIL
 HORIZONTAL
 
 SLIDER
-105
+125
 425
-197
+217
 458
 size-N
 size-N
 0
 2
-0.6
+0.7
 .1
 1
 NIL
 HORIZONTAL
 
 BUTTON
-485
-390
-540
-423
-O-O
-layout Tlayout
+10
+435
+65
+468
+Layout
+layout Select-Layout
 NIL
 1
 T
@@ -952,10 +971,10 @@ NIL
 1
 
 BUTTON
-545
-390
-600
-423
+65
+435
+120
+468
 Spring
 spring
 T
@@ -969,9 +988,9 @@ NIL
 1
 
 BUTTON
-200
+220
 425
-255
+275
 458
 NIL
 refresh
@@ -1075,9 +1094,9 @@ NIL
 1
 
 BUTTON
-335
+275
 460
-490
+345
 493
 Clear
 clear
@@ -1092,10 +1111,10 @@ NIL
 1
 
 MONITOR
-10
-460
-92
-505
+530
+480
+605
+525
 Avg Pth Lgth
 Average-Path-Length
 3
@@ -1245,32 +1264,32 @@ NIL
 1
 
 MONITOR
-160
-460
-220
 505
-Nb Nodes
+390
+555
+435
+Nodes
 Number-Nodes
 0
 1
 11
 
 MONITOR
-225
-460
-275
-505
-Nb Links
+555
+390
+605
+435
+Links
 Number-Links
 0
 1
 11
 
 MONITOR
-280
-460
-330
-505
+555
+435
+605
+480
 Density
 Density
 3
@@ -1296,10 +1315,10 @@ PENS
 "default" 1.0 0 -16777216 true "" ""
 
 MONITOR
-95
-460
-155
 505
+435
+555
+480
 Diameter
 diameter
 0
@@ -1324,15 +1343,15 @@ NIL
 1
 
 SLIDER
+411
 390
-390
-482
+503
 423
 gravity
 gravity
 0
 10
-0.22
+0.26
 .01
 1
 NIL
@@ -1356,10 +1375,10 @@ NIL
 1
 
 BUTTON
-335
-425
-410
-458
+125
+460
+195
+493
 Load
 Load
 NIL
@@ -1373,10 +1392,10 @@ NIL
 1
 
 BUTTON
-415
-425
-490
-458
+200
+460
+270
+493
 Save
 save
 NIL
@@ -1433,22 +1452,16 @@ Average-pagerank
 1
 11
 
-BUTTON
-495
-425
-597
-458
-Inspect Node
-inspect-node
-T
+MONITOR
+480
+480
+530
+525
+N.Comp
+length components
+17
 1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
+11
 
 @#$#@#$#@
 # Complex Networks Toolbox
@@ -1540,6 +1553,7 @@ Some of the useful NetLogo commands you will probably need are:
   * `store val L` : Store value `val` in list `L`.
   * `mean/sum/max/min L` : Returns the mean/sum/max/min value of list `L`.
   * `print v` : Print value of `v` in the Output.
+  * `print-csv v` : Print value of `v` in the Output as comma-separated-values (if `v` is a list).
   * `plotTable [x1...xn] [y1...yn]` : Plot the points `(x1,y1)...(xn,yn)`. 
 
 You can combine both to move some parameter in the creation/analysis of the networks. In the next example we study how the diameter of a Scale Free Network (built with Barabasi-Albert algorithm) changes in function of the size of the network:
@@ -1713,9 +1727,10 @@ The global measures we can take from any network are:
     Number-Nodes
     Number-Links
     Density
+    Diameter
+    Components
     Average-Degree
     Average-Path-Length
-    Diameter
     Average-Clustering
     Average-Betweenness, 
     Average-Eigenvector, 
@@ -1723,7 +1738,7 @@ The global measures we can take from any network are:
     Average-Page-Rank
     All
 
-Some of them need to compute centralities before they can be used.  If you choose _All_, ypu obtain a list with all the measures of the network.
+Some of then need to be explicitely computed before they can de used (`computer-diameter`, `compute-components`). Some of them need to compute centralities before they can be used.  If you choose _All_, you obtain a list with all the measures of the network.
 
 You can print any of them in the Output Window:
   
@@ -1775,6 +1790,13 @@ Computes the communities of the current network using the Louvain method (maximi
 modularity measure of the network).
 
 ![Communities](http://www.cs.us.es/~fsancho/images/2017-01/communities.png)
+
+### Remove Elements
+
+You can remove one random node of the network by using `remove-node`, but you need to indicate the way this node is selected among all the nodes in the network. If you provide the name of a centrality measure, then the node is selected following a distribution proportional to that measure in every node. If you indicate "uniform", then all the nodes have the same chances to be selected. For example:
+
+    remove-node "uniform"
+    remove-node "page-rank"
 
 ## Dynamics
 
