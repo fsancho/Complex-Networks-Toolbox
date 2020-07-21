@@ -6,6 +6,7 @@
 ;
 ;-----------------------------------------------------------------------------------
 
+
 ; You can add a comment starting with ";"
 ; First Script
 to script1
@@ -207,4 +208,16 @@ to demoSpread2
   ER-RN 0 .001
   layout "spring"
   spread 1 .1 .1 .01 1000
+end
+
+;------------- Connected components ---------------
+to-report component-sizes
+  compute-components
+  report map count components
+end
+
+to demo-sc-components
+  clear 
+  ER-RN 300 .01
+  print component-sizes
 end
